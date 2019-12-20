@@ -110,9 +110,6 @@ module Bundler
             end
           when Source::Rubygems
             source.remotes.each do |uri|
-              puts "**** #{uri.class}"
-              puts uri.to_s
-              puts "-----"
               if (uri.scheme == 'http' && !internal_source?(uri))
                 yield InsecureSource.new(uri.to_s)
               end
@@ -170,7 +167,14 @@ module Bundler
       # @return [Boolean]
       #
       def internal_source?(uri)
-        uri = URI(uri)
+        puts "**** #{uri.class}"
+        puts uri.to_s
+        puts "-----"
+        begin
+          uri = URI(uri)
+        rescue StandardError => e
+          puts e.message
+        end
 
         internal_host?(uri.host) if uri.host
       end
